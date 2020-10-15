@@ -1,0 +1,5 @@
+value,description
+Tax-5,"Taxed at 5%"
+Tax-5-12,"Taxed at 5% or 12%, based on price"
+Tax-12,"Taxed at 12%"
+Tax-18,"Taxed at 18%"
