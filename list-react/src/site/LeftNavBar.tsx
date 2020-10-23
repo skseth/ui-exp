@@ -1,23 +1,24 @@
 import {
-  Divider,
+  Collapse,
   Drawer,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
   makeStyles,
+  Typography
 } from "@material-ui/core";
-import AssignmentIcon from "@material-ui/icons/Assignment";
+import { ExpandLess, ExpandMore } from "@material-ui/icons";
+import AssignmentIcon from "@material-ui/icons/AssignmentOutlined";
+import BuildIcon from "@material-ui/icons/Build";
+import BusinessIcon from "@material-ui/icons/BusinessOutlined";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import HomeIcon from "@material-ui/icons/HomeOutlined";
+import PeopleIcon from "@material-ui/icons/People";
 import clsx from "clsx";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
-const drawerWidth = 240;
+import React, { FunctionComponent, ReactElement } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
+    marginLeft: "8px",
     padding: "0 8px",
     ...theme.mixins.toolbar,
   },
@@ -41,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
     }),
   },
   appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: theme.appDrawer.width,
+    width: `calc(100% - ${theme.appDrawer.width})`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -60,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     position: "relative",
     whiteSpace: "nowrap",
-    width: drawerWidth,
+    width: theme.appDrawer.width,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -96,64 +98,122 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  menuSummary:  {
+    backgroundColor: 'rgba(0, 0, 0, .03)',
+    borderBottom: '1px solid rgba(0, 0, 0, .125)',
+    marginBottom: -1,
+    minHeight: 56,
+  },
+  nested: {
+    //paddingLeft: theme.spacing(4),
+    backgroundColor: "lightgrey"
+  },
+  selectedMenu: {
+    backgroundColor: theme.palette.secondary.light
+  },
+  unselectedMenu: {
+  }
 }));
 
-export const mainListItems = (
-  <div>
-    <ListItem button component={Link} to="/">
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Lists" />
-    </ListItem>
-  </div>
-);
 
-export const secondaryListItems = (
-  <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItem>
-  </div>
-);
+interface LeftMenu {
+  name: string,
+  icon?: ReactElement,
+  link: string,
+  submenus: LeftMenu[]
+}
 
-export const LeftNavBar = () => {
+const homeMenu: LeftMenu[] = [
+  {name: "Home", icon: <HomeIcon/>, link: "/", submenus: []},
+  {name: "Admin", icon: <BusinessIcon/>, link: "/admin", submenus: []},
+]
+
+
+const adminMenu: LeftMenu[] = [
+  {name: "Home", icon: <HomeIcon/>, link: "/", submenus: []},
+  {name: "Admin", icon: <BusinessIcon/>, link: "/admin", submenus: []},
+  {name: "Maintenance", link: "#", icon: <BuildIcon/>, submenus: [
+    {name: "Users", link: "/admin/users", icon: <PeopleIcon />, submenus: []},
+    {name: "Lists", link: "/admin/lists", icon: <AssignmentIcon />, submenus: []}
+  ]},
+]
+
+interface LeftMenuEntryProp {
+  entry: LeftMenu
+}
+
+interface LeftNavBarProps {
+  isOpen: boolean,
+  isAdmin: boolean,
+  onClickDrawer: () => void
+}
+
+const CollapsibleListMenu: FunctionComponent<LeftMenuEntryProp>  = ({entry}) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(true);
+  const [expanded, setExpanded] = React.useState(true);
+  const location = useLocation();
+  
+
+  const handleClick = () => {
+      setExpanded(!expanded);
+  };
+
+  const hasChildren = entry.submenus.length > 0;
+
+  return (
+    <>
+      <ListItem 
+          key={entry.name}
+          onClick={handleClick} 
+          className={location.pathname === entry.link ? classes.selectedMenu : classes.unselectedMenu}   
+          component={Link}
+          to={entry.link}       
+          button>
+        <ListItemIcon>
+          {entry.icon}
+        </ListItemIcon>
+        <ListItemText primary={entry.name} />
+        {hasChildren && (expanded ? <ExpandLess /> : <ExpandMore />) }
+      </ListItem>
+      { hasChildren &&
+        <Collapse key={'Collapse' + entry.name} in={expanded} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+          {entry.submenus.map((submenu) => {
+            return (<ListItem key={submenu.name} button className={classes.nested} component={Link} to={submenu.link}>
+              { submenu.icon ? 
+              <ListItemIcon>
+                {submenu.icon}
+              </ListItemIcon>: <></> }
+              <ListItemText primary={<Typography>{submenu.name}</Typography>} />
+            </ListItem>)
+            })}
+          </List>
+        </Collapse>
+      }
+    </>);
+}
+
+export const LeftNavBar: FunctionComponent<LeftNavBarProps> = ({isOpen, isAdmin, onClickDrawer}) => {
+  const classes = useStyles();
+  const mainmenu = isAdmin ? adminMenu : homeMenu
+  
   return (
     <Drawer
       variant="permanent"
       classes={{
-        paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+        paper: clsx(classes.drawerPaper, !isOpen && classes.drawerPaperClose),
       }}
-      open={open}
+      open={isOpen}
     >
       <div className={classes.toolbarIcon}>
-        {/* </div><IconButton onClick={handleDrawerClose}> */}
-        <IconButton>
+        <img src="/shop-logo.png" alt="logo" style={{height: "80%"}}/>
+        <IconButton onClick={onClickDrawer}>
           <ChevronLeftIcon />
         </IconButton>
       </div>
-      <Divider />
-      <List>{mainListItems}</List>
-      <Divider />
-      <List>{secondaryListItems}</List>
+      <List>
+        {mainmenu.map((menu,index) => <CollapsibleListMenu key={index} entry={menu}/>)}
+      </List>
     </Drawer>
   );
 };

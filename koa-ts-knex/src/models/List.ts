@@ -8,6 +8,7 @@ export class List extends BaseModel {
   id!: number;
   name!: string;
   version?: number;
+  color?: string;
   items?: ListItems[];
 
   static tableName = 'lists';

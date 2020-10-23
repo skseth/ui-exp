@@ -1,4 +1,6 @@
 export interface ListItem {
-  value: string;
-  description: string;
+  index: number
+  value: string
+  description: string
+  color?: string
 }

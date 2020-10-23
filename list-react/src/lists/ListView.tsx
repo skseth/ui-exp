@@ -12,11 +12,13 @@ const useStyles = makeStyles((theme) => ({
 const listInitialState: Omit<List, "id"> = {
   name: "Status",
   description: "",
+  color: "#009900",
   items: [
-    { value: "Active", description: "Active State" },
-    { value: "Inactive", description: "Inactive State" },
+    { index: 1, value: "Active", description: "Active State" },
+    { index: 2, value: "Inactive", description: "Inactive State" },
   ],
 };
+
 type ListViewProps = Pick<List, "id">;
 export const ListView: FunctionComponent<ListViewProps> = (props) => {
   const classes = useStyles();
@@ -29,7 +31,9 @@ export const ListView: FunctionComponent<ListViewProps> = (props) => {
       setList({
         name: res.data.name,
         description: res.data.description,
-        items: res.data.items.map((item: any) => ({
+        color: res.data.color,
+        items: res.data.items.map((item: any, index: number) => ({
+          index: index,
           value: item.value,
           description: item.description,
         })),

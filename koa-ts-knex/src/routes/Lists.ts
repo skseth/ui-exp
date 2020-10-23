@@ -28,7 +28,7 @@ ListsRouter.post('/lists', async (ctx: Context) => {
 ListsRouter.get('/lists', async (ctx: Context) => {
   const query = List.query();
 
-  query.select('id', 'name');
+  query.select('id', 'name', 'description', 'color');
 
   query
     .withGraphFetched('[items(selectValueAndDescription, orderByValue)]')
