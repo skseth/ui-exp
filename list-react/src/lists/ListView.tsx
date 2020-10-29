@@ -1,33 +1,33 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
-import { List } from "../model/List";
-import axios from "axios";
-import { makeStyles } from "@material-ui/core";
+import React, { FunctionComponent, useState, useEffect } from 'react'
+import { List } from '../model/List'
+import axios from 'axios'
+import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   list: {
-    float: "left",
-  },
-}));
+    float: 'left'
+  }
+}))
 
-const listInitialState: Omit<List, "id"> = {
-  name: "Status",
-  description: "",
-  color: "#009900",
+const listInitialState: Omit<List, 'id'> = {
+  name: 'Status',
+  description: '',
+  color: '#009900',
   items: [
-    { index: 1, value: "Active", description: "Active State" },
-    { index: 2, value: "Inactive", description: "Inactive State" },
-  ],
-};
+    { index: 1, value: 'Active', description: 'Active State' },
+    { index: 2, value: 'Inactive', description: 'Inactive State' }
+  ]
+}
 
-type ListViewProps = Pick<List, "id">;
+type ListViewProps = Pick<List, 'id'>
 export const ListView: FunctionComponent<ListViewProps> = (props) => {
-  const classes = useStyles();
-  const [id, setId] = useState(props.id);
-  const [list, setList] = useState(listInitialState);
+  const classes = useStyles()
+  const [id, setId] = useState(props.id)
+  const [list, setList] = useState(listInitialState)
 
   useEffect(() => {
-    axios.get("http://localhost:7654/lists/2").then((res) => {
-      console.log(res.data);
+    axios.get('http://localhost:7654/lists/2').then((res) => {
+      console.log(res.data)
       setList({
         name: res.data.name,
         description: res.data.description,
@@ -35,11 +35,11 @@ export const ListView: FunctionComponent<ListViewProps> = (props) => {
         items: res.data.items.map((item: any, index: number) => ({
           index: index,
           value: item.value,
-          description: item.description,
-        })),
-      });
-    });
-  }, []);
+          description: item.description
+        }))
+      })
+    })
+  }, [])
 
   return (
     <div className={classes.list}>
@@ -52,5 +52,5 @@ export const ListView: FunctionComponent<ListViewProps> = (props) => {
         ))}
       </ul>
     </div>
-  );
-};
+  )
+}

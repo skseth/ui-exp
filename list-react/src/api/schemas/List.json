@@ -1,0 +1,19 @@
+{
+  "id": "schemas/List.json",
+  "type": "object",
+  "title": "List of Values",
+  "properties": {
+    "id": { "type": "integer", "title": "Id" },
+    "name": { "type": "string", "title": "Name" },
+    "description": { "type": "string", "title": "Description" },
+    "color": { "type": "string", "title": "Name" },
+    "version": { "type": "integer", "title": "Version" },
+    "items": {
+      "type": "array",
+      "title": "Items",
+      "items": { "$ref": "./ListItem.json" }
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}

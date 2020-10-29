@@ -1,25 +1,27 @@
-import { Box, Grid, IconButton, makeStyles, Popover } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import CheckIcon from "@material-ui/icons/Check";
-import React, { FunctionComponent, useState } from "react";
-import { RGBColor } from 'react-color';
-import { RGBColorField } from "../controls/RGBColorField";
-import { ListItem } from "../model/ListItem";
+import { Box, Grid, IconButton, makeStyles, Popover } from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
+import CheckIcon from '@material-ui/icons/Check'
+import React, { FunctionComponent, useState } from 'react'
+import { RGBColor } from 'react-color'
+import { RGBColorField } from '../controls/RGBColorField'
+import { ListItem } from '../model/ListItem'
 
 const useStyles = makeStyles((theme) => ({
   popup: {
     zIndex: 2000,
-    opacity: "0.8"
+    opacity: '0.8'
   },
   root: {
     padding: theme.spacing(3),
-    backgroundColor: "lightyellow",
-    opacity: "0.8"
-  },
+    backgroundColor: 'lightyellow',
+    opacity: '0.8'
+  }
 }))
 
-function rgba2hex({a,r,g,b}: RGBColor) {
-  return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}${Math.round((a||0)*255).toString(16)}`
+function rgba2hex({ a, r, g, b }: RGBColor) {
+  return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}${Math.round(
+    (a || 0) * 255
+  ).toString(16)}`
 }
 
 interface ListItemProp {
@@ -30,22 +32,28 @@ interface ListItemProp {
   onUpdate: (updatedItem: ListItem) => void
 }
 
-export const ListItemEditForm: FunctionComponent<ListItemProp> = ({open, item, anchorEl, onClose, onUpdate}) => {
+export const ListItemEditForm: FunctionComponent<ListItemProp> = ({
+  open,
+  item,
+  anchorEl,
+  onClose,
+  onUpdate
+}) => {
   if (!item) {
     item = {
-        index: 99,
-        value: "",
-        description: "",
-        color: "#00AA00"
+      index: 99,
+      value: '',
+      description: '',
+      color: '#00AA00'
     }
   }
 
   const classes = useStyles()
   const [itemValue, setItemValue] = useState(item.value)
-  const [color, setColor] = useState(item.color || "#00AA00")
+  const [color, setColor] = useState(item.color || '#00AA00')
 
   const handleOk = () => {
-    onUpdate(Object.assign({}, item, {value: itemValue, color}))
+    onUpdate(Object.assign({}, item, { value: itemValue, color }))
     onClose()
   }
 
@@ -54,39 +62,46 @@ export const ListItemEditForm: FunctionComponent<ListItemProp> = ({open, item, a
   }
 
   return (
-    <React.Fragment>{ open && (
-        <Popover 
-            open={open} 
-            anchorEl={anchorEl} 
-            anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center"
-            }}
-            transformOrigin={{
-                vertical: "top",
-                horizontal: "center"
-            }}            
-            className={classes.popup}
-            onClose={onClose}
+    <React.Fragment>
+      {open && (
+        <Popover
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+          className={classes.popup}
+          onClose={onClose}
         >
           <Box className={classes.root}>
             <Grid container spacing={3} direction="column" justify="flex-start">
-                <TextField
-                  autoFocus
-                  label="Value"
-                  value={itemValue}
-                  fullWidth
-                  type="string"
-                  variant="filled"
-                  onChange={handleValueChange}
-                />
-              <RGBColorField id="color" label="Color" placement="right" value={color || "#fff"} onChange={(color) => setColor(rgba2hex(color.rgb))}/>
+              <TextField
+                autoFocus
+                label="Value"
+                value={itemValue}
+                fullWidth
+                type="string"
+                variant="filled"
+                onChange={handleValueChange}
+              />
+              <RGBColorField
+                id="color"
+                label="Color"
+                placement="right"
+                value={color || '#fff'}
+                onChange={setColor}
+              />
               <IconButton onClick={handleOk}>
-                <CheckIcon/>
+                <CheckIcon />
               </IconButton>
             </Grid>
           </Box>
-        </Popover>    
+        </Popover>
       )}
     </React.Fragment>
   )

@@ -1,0 +1,142 @@
+import React, { useEffect, useRef, useState } from 'react'
+
+import TextField, {
+  StandardTextFieldProps as TextFieldProps
+} from '@material-ui/core/TextField'
+
+import { ControlProps } from './ControlProps'
+import { createReadStream } from 'fs'
+
+export type StringControlProps = ControlProps & TextFieldProps
+export type StringControlState = {
+  value: any
+  selectionStart: number
+  selectionEnd: number
+}
+
+export class StringControlNoDebounce extends React.PureComponent<
+  StringControlProps,
+  StringControlState
+> {
+  static defaultProps = {
+    required: false,
+    readonly: false,
+    disabled: false,
+    onBlur: () => {},
+    onFocus: () => {},
+    autofocus: false,
+    errors: []
+  }
+
+  state = {
+    value: this.props.value,
+    selectionEnd: 0,
+    selectionStart: 0
+  }
+
+  private cursor = 1
+  private inputRef = React.createRef<HTMLInputElement>()
+
+  _updateCursor = () => {
+    this.cursor = this.inputRef.current?.selectionStart || 0
+  }
+
+  _onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let nextValue = e.target.value
+    if (/\s/g.test(nextValue)) {
+      nextValue = this.state?.value || 0
+      this.setState({
+        value: nextValue,
+        selectionStart: this.inputRef.current?.selectionStart || 0,
+        selectionEnd: this.inputRef.current?.selectionEnd || 0
+      })
+    } else {
+      this.props.onChange(e.target.value)
+      this._updateCursor()
+      //console.log(this.cursor)
+    }
+  }
+
+  _onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (this.props.onBlur) {
+      this.props.onBlur(this.props.id, e.target.value)
+    }
+  }
+
+  _onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    this._updateCursor()
+    if (this.props.onFocus) {
+      this.props.onFocus(this.props.id, e.target.value)
+    }
+  }
+
+  componentDidMount() {
+    //console.log(`did mount`)
+  }
+
+  componentDidUpdate(
+    prevProps: StringControlProps,
+    prevState: StringControlState
+  ) {
+    //console.log(`did update`)
+    if (this.state && prevState && this.state.value === prevState.value) {
+      this.inputRef.current?.setSelectionRange(this.cursor, this.cursor)
+    }
+
+    // if (this.inputRef.current) {
+    // console.log(`updating cursor to ${this.cursor}`)
+    //   this.inputRef.current.selectionStart = this.cursor
+    //   this.inputRef.current.selectionEnd = this.cursor
+    // }
+  }
+
+  componentWillUpdate() {
+    //console.log(`will update`)
+  }
+
+  componentWillUnmount() {
+    //console.log(`will unmount`)
+  }
+
+  componentWillReceiveProps() {
+    //console.log(`will recieve props`)
+  }
+
+  render() {
+    //console.log(`render`)
+    const {
+      id,
+      required = false,
+      readonly = false,
+      disabled = false,
+      label,
+      value = '',
+      onChange,
+      onBlur = () => {},
+      onFocus = () => {},
+      autofocus = false,
+      errors = [],
+      ...textFieldProps
+    }: StringControlProps = this.props
+
+    return (
+      <TextField
+        id={id}
+        inputRef={this.inputRef}
+        label={label}
+        autoFocus={autofocus}
+        required={required}
+        disabled={disabled || readonly}
+        type="string"
+        value={value}
+        error={errors.length > 0}
+        onKeyDown={this._updateCursor}
+        onClick={this._updateCursor}
+        onChange={this._onChange}
+        onBlur={this._onBlur}
+        onFocus={this._onFocus}
+        {...(textFieldProps as TextFieldProps)}
+      />
+    )
+  }
+}

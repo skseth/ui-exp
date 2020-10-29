@@ -1,0 +1,12 @@
+{
+  "id": "schemas/ListItem.json",
+  "type": "object",
+  "title": "Value",
+  "properties": {
+    "value": { "type": "string", "title": "Value" },
+    "description": { "type": "string", "title": "Description" },
+    "color": { "type": "string", "title": "Color" }
+  },
+  "required": ["value"],
+  "additionalProperties": false
+}

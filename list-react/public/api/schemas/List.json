@@ -1,0 +1,15 @@
+{
+  "id": "schemas/List.json",
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer" },
+    "name": { "type": "string" },
+    "version": { "type": "integer" },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "./ListItem.json" }
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}

@@ -22,6 +22,19 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# JSON Schema for validation and form display
+
+The title property serves as label for the adaptive form components.
+The description property is set as long description for an adaptive form component.
+The default property serves as initial value of an adaptive form field.
+The maxLength property is set as maxlength attribute of the text field component.
+The minimum, maximum, exclusiveMinimum, and exclusiveMaximum properties are used for Numeric box component.
+To support range for DatePicker component additional JSON Schema properties minDate and maxDate are provided..
+The minItems and maxItems properties are used to restrict the number of items/fields that may be added or removed from a panel component.
+The readOnly property sets the readonly attribute of an adaptive form component.
+The required property marks the adaptive form field as mandatory whereas in case of panel(where type is object), the final submitted JSON data has fields with empty value corresponding to that object.
+The pattern property is set as the validation pattern (regular expression) in adaptive form.
+
 ## Available Scripts
 
 In the project directory, you can run:
