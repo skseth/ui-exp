@@ -15,59 +15,37 @@ import EditIcon from '@material-ui/icons/Edit'
 import axios from 'axios'
 import React, { FunctionComponent, useCallback, useEffect } from 'react'
 import { FunctionBody } from 'typescript'
-import { List } from '../model/List'
-import { ListPopup } from './ListPopup'
 import { TableProp, useTableReducer } from '../controls/useControlReducer'
 
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650
-  },
-  chips: {
-    display: 'flex',
-    justifyContent: 'right',
-    flexWrap: 'wrap',
-    '& > *': {
-      margin: theme.spacing(0.5)
-    }
   }
 }))
 
-const rowsInitialState: List[] = []
-
-const adjustRows = (rows: List[]) => {
-  rows.forEach((list) =>
-    list.items.forEach((item, index) => {
-      item.index = index
-      if (!list.color) {
-        list.color = '#00AA00'
-      }
-      if (!item.color) {
-        item.color = list.color
-      }
-    })
-  )
+type TableViewColumn {
+    header: React.ReactNode
+    item: (column: number) => React.ReactNode
 }
 
-export const ListsView: FunctionComponent<TableProp<List>> = (props) => {
+type TableViewProp = {
+    columns: TableViewColumn[]
+    onEdit: (index: number) => void
+    onRemove: (index: number) => void
+    onCancel: (index: number) => void
+    editDialog: (index: number) => React.ReactNode
+    editIndex: number
+}
+
+export const TableView: FunctionComponent<TableViewProp> = ({columns, onEdit, onRemove, onCancel, editIndex}) => {
   const classes = useStyles()
-
-  const [state, dispatch, tp] = useTableReducer('schemas/List', props)
-
-  useEffect(() => {
-    axios.get('http://localhost:7654/lists').then((res) => {
-      const rows: List[] = res.data
-      adjustRows(rows)
-      dispatch({ type: 'fetched', value: rows })
-    })
-  }, [dispatch])
 
   const editIcon = (index: number) => (
     <React.Fragment>
-      <IconButton onClick={() => tp.onBeginUpdate(index)}>
+      <IconButton onClick={() => onEdit(index)}>
         <EditIcon />
       </IconButton>
-      {index === state.editIndex ? (
+      {index === editIndex ? (
         <ListPopup
           value={state.value[index]}
           onChange={tp.onUpdate}

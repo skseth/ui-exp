@@ -13,9 +13,11 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import axios from 'axios'
-import React, { useCallback, useEffect } from 'react'
+import React, { FunctionComponent, useCallback, useEffect } from 'react'
+import { FunctionBody } from 'typescript'
 import { List } from '../model/List'
 import { ListPopup } from './ListPopup'
+import { TableProp, useTableReducer } from '../controls/useControlReducer'
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -33,62 +35,65 @@ const useStyles = makeStyles((theme) => ({
 
 const rowsInitialState: List[] = []
 
-export const ListsView = () => {
-  const classes = useStyles()
-  const [rows, setRows] = React.useState(rowsInitialState)
-  const [editIndex, setEditIndex] = React.useState(-1)
+const adjustRows = (rows: List[]) => {
+  rows.forEach((list) =>
+    list.items.forEach((item, index) => {
+      item.index = index
+      if (!list.color) {
+        list.color = '#00AA00'
+      }
+      if (!item.color) {
+        item.color = list.color
+      }
+    })
+  )
+}
 
-  const handleDelete = () => {
-    console.info('You clicked the delete icon.')
-  }
+type TableColumnProp = {
+  name: string
+}
+
+const TableColumn: FunctionComponent<TableColumnProp> = ({ name }) => {
+  return <p>{name}</p>
+}
+
+type TablexProp = {
+  name: string
+  children: React.ReactElement<TableColumn>[]
+}
+
+const TableView: FunctionComponent<TablexProp> = ({ name, children }) => {
+  return (
+    <div>
+      {name}
+      <div>{children}</div>
+    </div>
+  )
+}
+
+export const ListsView: FunctionComponent<TableProp<List>> = (props) => {
+  const classes = useStyles()
+
+  const [state, dispatch, tp] = useTableReducer('schemas/List', props)
 
   useEffect(() => {
     axios.get('http://localhost:7654/lists').then((res) => {
       const rows: List[] = res.data
-
-      rows.forEach((list) =>
-        list.items.forEach((item, index) => {
-          item.index = index
-          if (!list.color) {
-            list.color = '#00AA00'
-          }
-          if (!item.color) {
-            item.color = list.color
-          }
-        })
-      )
-
-      setRows(rows)
+      adjustRows(rows)
+      dispatch({ type: 'fetched', value: rows })
     })
-  }, [])
-
-  const deleteComponent = (index: number) => {
-    // perform deletion
-    var newRows = rows.slice()
-    newRows.splice(index, 1)
-    setRows(newRows)
-  }
-
-  const onEditComplete = useCallback(
-    (index: number, newList: List) => {
-      setEditIndex(-1)
-      var newRows = rows.slice()
-      newRows[index] = newList
-      setRows(newRows)
-    },
-    [rows]
-  )
+  }, [dispatch])
 
   const editIcon = (index: number) => (
     <React.Fragment>
-      <IconButton onClick={() => setEditIndex(index)}>
+      <IconButton onClick={() => tp.onBeginUpdate(index)}>
         <EditIcon />
       </IconButton>
-      {index === editIndex ? (
+      {index === state.editIndex ? (
         <ListPopup
-          value={rows[index]}
-          onChange={(value) => onEditComplete(index, value)}
-          onCancel={() => setEditIndex(-1)}
+          value={state.value[index]}
+          onChange={tp.onUpdate}
+          onCancel={tp.onCancelEdit}
           open={true}
         />
       ) : (
@@ -98,13 +103,17 @@ export const ListsView = () => {
   )
 
   const deleteIcon = (index: number) => (
-    <IconButton onClick={() => deleteComponent(index)}>
+    <IconButton onClick={() => tp.onDelete(index)}>
       <DeleteIcon color="primary" />
     </IconButton>
   )
 
   return (
     <TableContainer component={Paper}>
+      <TableView name="hello">
+        <TableColumn name="world" />
+        <Chip></Chip>
+      </TableView>
       <Table className={classes.table} aria-label="lists table">
         <TableHead>
           <TableRow>
@@ -115,7 +124,7 @@ export const ListsView = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, index) => (
+          {state.value.map((row, index) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
                 {row.id}
@@ -131,7 +140,6 @@ export const ListsView = () => {
                       backgroundColor: item.color,
                       color: 'white'
                     }}
-                    onDelete={handleDelete}
                   />
                 ))}
               </TableCell>

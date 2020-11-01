@@ -11,6 +11,7 @@
 - responsive design
 - various form components
 - logs from ui
+- accessibility
 
 # Components
 
