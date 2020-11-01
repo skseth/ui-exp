@@ -1,0 +1,237 @@
+<script>
+  function getFormData(form) {
+    var data = {};
+    form.serializeArray().forEach((entry) => (data[entry.name] = entry.value));
+    return data;
+  }
+
+  function tableHeader(headers, widths) {
+    const ths = headers
+      .map((header, index) => `<th class='col-${widths[index]}'>${header}</th>`)
+      .join();
+
+    return `<thead><tr class="d-flex">${ths}</tr></thead>`;
+  }
+
+  function editIcon(idfn) {
+    return `<span id="${idfn(
+      "edit"
+    )}"><i class="fa fa-pencil" style="color:darkblue;"></i></span>`;
+  }
+
+  function deleteIcon(idfn) {
+    return `<span id="${idfn(
+      "delete"
+    )}"><i class="fa fa-trash" style="color:darkblue;padding-left: 1em;"></i></span>`;
+  }
+
+  function tableRow(attrs, widths, valuefn, idfn) {
+    var tds = attrs
+      .map(
+        (attr, index) =>
+          `<td class='small col-${widths[index]}'>${valuefn(attr)}</td>`
+      )
+      .join();
+
+    var editCol = "";
+
+    if (attrs.length < widths.length) {
+      editCol = `<td class='col-${widths[attrs.length]}'>${editIcon(
+        idfn
+      )}${deleteIcon(idfn)}</td>`;
+    }
+    return `<tr class='d-flex'>${tds}${editCol}</tr>`;
+  }
+
+  function tableBody(rows, attrs, widths, valuefn, actionfn) {
+    const trs = rows
+      .map((row, index) =>
+        tableRow(
+          attrs,
+          widths,
+          (colindex) => valuefn(index, colindex),
+          (action) => actionfn(index, action)
+        )
+      )
+      .join();
+
+    return `<tbody>${trs}</tbody>`;
+  }
+
+  function updateTable(issuances) {
+    const widths = [2, 4, 1, 1, 2, 2];
+    const headers = ["Issue Date", "Item", "Unit", "Quantity", "To", "Action"];
+    const attrs = ["issueDate", "item", "unit", "quantity", "to"];
+
+    const idfn = (row, action) => {
+      return `si-items-${row}-${action}`;
+    };
+
+    $("#si-items").html(
+      `${tableHeader(headers, widths)}${tableBody(
+        issuances,
+        attrs,
+        widths,
+        (r, c) => issuances[r][c],
+        idfn
+      )}`
+    );
+
+    issuances.forEach((value, row) => {
+      $("#" + idfn(row, "edit")).click(() => {
+        StockIssuanceForm.instance().openEdit(value);
+      });
+      $("#" + idfn(row, "delete")).click(() =>
+        alert(`row ${row} for delete clicked`)
+      );
+    });
+  }
+
+  function initializeStockIssuances() {
+    $("#si-new-open").click(function () {
+      StockIssuanceForm.instance().openNew();
+      return false;
+    });
+
+    google.script.run
+      .withSuccessHandler((items) => {
+        console.log(items);
+        updateTable(items);
+      })
+      .stockIssuanceList();
+  }
+
+  class Inventory {
+    #list = null;
+    #unitsLookup = {};
+
+    constructor(items) {
+      this.#list = items.map((item) => item.name).sort();
+      items.forEach((item) => (this.#unitsLookup[item.name] = item.unit));
+    }
+
+    unit(itemname) {
+      return this.#unitsLookup[itemname] || "units";
+    }
+
+    get list() {
+      return this.#list;
+    }
+
+    static initialize() {
+      return new Promise((resolve, reject) => {
+        google.script.run
+          .withSuccessHandler((items) => {
+            resolve(new Inventory(items));
+          })
+          .withFailureHandler((error) => {
+            console.log(`Error in inventory initialization ${error}`);
+            reject(error);
+          })
+          .inventoryList();
+      });
+    }
+  }
+
+  class StockIssuance {
+    rowIndex = -1;
+    date = new Date();
+    item = "";
+    quantity = "";
+    unit = "units";
+    to = "";
+  }
+
+  class StockIssuanceForm {
+    #rootEl = $("#si-right");
+    #form = $("#si-new-form");
+    #itemEl = $("#si-new-item");
+    #unitsEl = $("#si-new-units");
+    #inventory = null;
+
+    constructor() {
+      if (StockIssuanceForm._instance) {
+        throw new Error(
+          "Singleton classes can't be instantiated more than once."
+        );
+      }
+      StockIssuanceForm._instance = this;
+    }
+
+    initalize() {
+      this.#rootEl.dialog({
+        autoOpen: false,
+        modal: true,
+        show: "blind",
+        hide: "blind",
+        dialogClass: "dialog-no-close",
+      });
+
+      this.#itemEl.change((e) => this.onItemSelect(e.target.value));
+
+      Inventory.initialize().then((i) => {
+        this.#inventory = i;
+        this.#itemEl.autocomplete({ source: this.#inventory.list });
+      });
+    }
+
+    static instance() {
+      if (StockIssuanceForm._instance) return StockIssuanceForm._instance;
+      return new StockIssuanceForm();
+    }
+
+    static initalizeInstance() {
+      StockIssuanceForm.instance().initalize();
+    }
+
+    isOpen() {
+      return this.#rootEl.dialog("isOpen");
+    }
+
+    onItemSelect(itemname) {
+      this.#unitsEl.html(this.#inventory.unit(itemname));
+    }
+
+    onSubmitNew(event) {
+      google.script.run
+        .withSuccessHandler(() => initializeStockIssuances())
+        .newStockIssuance(getFormData($("#si-new-form")));
+      event.preventDefault();
+    }
+
+    onSubmitEdit(event) {
+      alert(`Edit submit`);
+      event.preventDefault();
+    }
+
+    open(title) {
+      this.#rootEl.dialog("option", "title", title).dialog("open");
+    }
+
+    openNew() {
+      if (!this.isOpen()) {
+        this.#form.submit((e) => this.onSubmitNew(e));
+        this.open("Add New Stock Issuance");
+      }
+    }
+
+    openEdit(issuance) {
+      if (!this.isOpen()) {
+        this.#form.submit((e) => this.onSubmitEdit(e));
+        this.open("Edit Stock Issuance");
+      }
+    }
+
+    openDelete(issuance) {
+      if (!this.isOpen()) {
+        this.open("Edit Stock Issuance");
+      }
+    }
+  }
+
+  $(document).ready(function () {
+    $("#tabs").tabs();
+    initializeStockIssuances();
+    StockIssuanceForm.initalizeInstance();
+  });
+</script>
