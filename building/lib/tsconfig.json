@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "composite": true,
+      "target":"ES2015",
+      "experimentalDecorators": true,
+      "inlineSourceMap": true,
+      "strict": true
+    }
+}

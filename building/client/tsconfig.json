@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target":"ES2015",
+      "lib": ["esnext", "DOM"],
+      "strict": true,
+      "experimentalDecorators": true,
+      "types": ["google-apps-script", "jquery", "jqueryui"],
+      "inlineSourceMap": true,
+      "baseUrl": ".",
+      "paths": {
+        "@project/*": ["../lib/*"]
+      }
+    },
+    "references": [
+      {"path": "../lib"}
+    ]
+}
