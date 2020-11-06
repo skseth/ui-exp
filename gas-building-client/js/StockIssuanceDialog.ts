@@ -9,6 +9,8 @@ import {
   shallowEqual,
   ValueOf
 } from '@shared/ui-lib/input'
+import { StockIssuance } from '../../shared/building-model/index'
+import { google } from './declarations'
 import { Inventory } from './Inventory'
 
 export abstract class Dialog<T> {
@@ -95,7 +97,7 @@ export abstract class Dialog<T> {
   abstract mustRender(): void
 }
 
-class StockIssuanceDialog extends Dialog<model.StockIssuance> {
+class StockIssuanceDialog extends Dialog<StockIssuance> {
   #form: JQuery<HTMLFormElement> = $('#si-new-form')
   #issueDateEl: JQuery<HTMLInputElement> = $('#si-new-issueDate')
   #itemEl: JQuery<HTMLInputElement> = $('#si-new-item')
@@ -176,7 +178,7 @@ class StockIssuanceDialog extends Dialog<model.StockIssuance> {
       console.log(value)
 
       google.script.run
-        .withFailureHandler((error) => console.log(error))
+        .withFailureHandler((error: Error) => console.log(error))
         .withSuccessHandler(() => this.props?.onChange?.(value))
         .newStockIssuance(value)
       event.preventDefault()
@@ -186,7 +188,7 @@ class StockIssuanceDialog extends Dialog<model.StockIssuance> {
     // set autofocus
   }
 
-  getValue(): model.StockIssuance {
+  getValue(): StockIssuance {
     return {
       rowIndex: this.getState().value?.rowIndex,
       issueDate: this.#issueDateEl.val() as string,

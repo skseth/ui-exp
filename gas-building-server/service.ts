@@ -1,6 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import * as DateUtils from '../shared/date-lib/index'
-import * as SheetUtils from '../shared/gas-lib/sheet_utils'
+import { InventoryItem, StockIssuance } from '../shared/building-model/index'
+import {
+  getStartOfLastWeek,
+  isLater,
+  DateToYYYYMMDD
+} from '../shared/date-lib/index'
+import { openSheet } from '../shared/gas-lib/sheet_utils'
 
 const si_issuance = 'Stock Issuance'
 const si_inventory = 'Inventory'
@@ -13,24 +18,24 @@ export class InventoryService implements InventoryService {
     return HtmlService.createTemplateFromFile('si').evaluate()
   }
 
-  static newStockIssuance(req: model.StockIssuance): void {
+  static newStockIssuance(req: StockIssuance): void {
     Logger.log(req)
-    const ws = SheetUtils.openSheet(si_url, si_issuance)
+    const ws = openSheet(si_url, si_issuance)
     ws.appendRow([req.issueDate, req.itemName, 'unit', req.quantity, req.to])
   }
 
-  static stockIssuanceList(): model.StockIssuance[] {
-    const ws = SheetUtils.openSheet(si_url, si_issuance)
+  static stockIssuanceList(): StockIssuance[] {
+    const ws = openSheet(si_url, si_issuance)
 
     const values = ws.getDataRange().getValues()
 
-    const startOfWeek = DateUtils.getStartOfLastWeek()
+    const startOfWeek = getStartOfLastWeek()
 
     const retval = values
-      .filter((row) => (DateUtils.isLater(row[0], startOfWeek) ? true : false))
+      .filter((row) => (isLater(row[0], startOfWeek) ? true : false))
       .map((row, index) => ({
         rowIndex: index,
-        issueDate: DateUtils.DateToYYYYMMDD(row[0]),
+        issueDate: DateToYYYYMMDD(row[0]),
         itemName: row[1],
         unit: row[2],
         quantity: row[3],
@@ -50,8 +55,8 @@ export class InventoryService implements InventoryService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static inventoryList(): model.InventoryItem[] {
-    const ws = SheetUtils.openSheet(si_url, si_inventory)
+  static inventoryList(): InventoryItem[] {
+    const ws = openSheet(si_url, si_inventory)
 
     const range = ws.getRange(2, 1, 200, 3).getValues()
 

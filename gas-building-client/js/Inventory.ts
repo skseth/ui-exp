@@ -1,8 +1,11 @@
+import { InventoryItem } from '../../shared/building-model/index'
+import { google } from './declarations'
+
 export class Inventory {
   #list: string[]
   #unitsLookup: { [key: string]: string } = {}
 
-  constructor(items: model.InventoryItem[]) {
+  constructor(items: InventoryItem[]) {
     this.#list = items.map((item) => item.name).sort()
     items.forEach((item) => (this.#unitsLookup[item.name] = item.unit))
   }
@@ -19,7 +22,7 @@ export class Inventory {
     return new Promise<Inventory>((resolve, reject) => {
       google.script.run
         .withSuccessHandler((items) => {
-          resolve(new Inventory(items as model.InventoryItem[]))
+          resolve(new Inventory(items as InventoryItem[]))
         })
         .withFailureHandler((error) => {
           console.log(`Error in inventory initialization ${error}`)

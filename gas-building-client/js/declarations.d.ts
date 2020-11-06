@@ -1,7 +1,8 @@
-// Google Apps Script methods available to scripts
+import { InventoryService } from '../../shared/building-model/index'
+import { GoogleScriptRun } from '../../shared/gas-client-lib/index'
 
 declare namespace google {
   namespace script {
-    let run: Run<InventoryService>
+    let run: GoogleScriptRun<InventoryService>
   }
 }
