@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig-gas-imports",
+  "compilerOptions": {
+    "outFile": "../../build/shared/gas-lib/gas-lib.js"
+  },
+
+  "references": [],
+
+  "include": ["**/*.ts"]
+}

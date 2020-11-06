@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig-gas-ui",
+  "include": ["**/*.ts", "../shared/gas-client-lib/*.ts", "../shared/building-model/*.ts"],
+  "compilerOptions": {
+    "types": ["jquery", "jqueryui"],
+    "inlineSourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/ui-lib/input": ["../shared/ui-lib/input"]
+    }
+  },
+  "references": [
+    {"path": "../shared/ui-lib"}
+  ]
+}

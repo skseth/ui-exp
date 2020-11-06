@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+
+    "lib": ["esnext"],
+    "module": "none",
+    // "noLib": true,
+    "target": "ES2019",
+    "types": ["google-apps-script"],
+
+    "strict": true,
+    // "alwaysStrict": true,
+    // "noImplicitAny": true,
+    // "noImplicitReturns": true,
+    // "strictBindCallApply": true,
+    // "strictNullChecks": true,
+    // "strictFunctionTypes": true,
+    // "strictPropertyInitialization": true,
+
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "noEmitOnError": true,
+    "noErrorTruncation": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    // "preserveConstEnums": true,
+    // "removeComments": true,
+    // "skipLibCheck": true,
+    "strictNullChecks": true,
+    // "suppressExcessPropertyErrors": true,
+    // "suppressImplicitAnyIndexErrors": true,
+
+    // "declaration": true,
+    // "declarationMap": true,
+    "newLine": "lf",
+    "pretty": true
+    // "sourceMap": true,
+  }
+}

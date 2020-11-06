@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig-gas-imports",
+  "compilerOptions": {
+    "outFile": "../build/gas-building-server/Code.js"
+  },
+  "include": ["**/*.ts", "../shared/date-lib/*.ts", "../shared/gas-lib/*.ts", "../shared/building-model/*.ts"],
+  "baseUrl": ".",
+  "paths": {
+    "@shared/date-lib/index": ["../shared/date-lib/index.ts"]
+  }
+}

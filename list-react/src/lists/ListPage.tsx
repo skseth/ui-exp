@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'
-import { ListsView } from './ListsViewNew'
+import { ListsView } from './ListsView'
 
 export const useStyles = makeStyles((theme) => ({
   container: {
