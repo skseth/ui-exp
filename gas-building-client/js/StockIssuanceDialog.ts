@@ -8,7 +8,7 @@ import {
   generateFormReducer,
   shallowEqual,
   ValueOf
-} from '@shared/ui-lib/input'
+} from '@shared/ui-lib'
 import { StockIssuance } from '@shared/building-model'
 import { Inventory } from './Inventory'
 

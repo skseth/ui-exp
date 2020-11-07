@@ -6,7 +6,8 @@
     "inlineSourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@shared/ui-lib/input": ["../shared/ui-lib/input"]
+      "@shared/ui-lib": ["../shared/ui-lib/index.ts"],
+      "@shared/gas-client-lib": ["../shared/gas-client-lib/index.ts"]
     }
   },
   "references": [

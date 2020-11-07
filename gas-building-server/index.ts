@@ -6,7 +6,7 @@
  * in which files get added to the output
  */
 
-/// <reference path="../shared/gas-lib/define.ts" />
+/// <reference path="../shared/define-lib/index.ts" />
 /// <reference path="Code.ts" />
 /// <reference path="service.ts" />
 

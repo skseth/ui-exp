@@ -1,11 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { InventoryItem, StockIssuance } from '@shared/building-model'
-import {
-  getStartOfLastWeek,
-  isLater,
-  DateToYYYYMMDD
-} from '../shared/date-lib/index'
-import { openSheet } from '../shared/gas-lib/sheet_utils'
+import { getStartOfLastWeek, isLater, DateToYYYYMMDD } from '@shared/date-lib'
+import { openSheet } from '@shared/gas-lib'
 
 const si_issuance = 'Stock Issuance'
 const si_inventory = 'Inventory'
