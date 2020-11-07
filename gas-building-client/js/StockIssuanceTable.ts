@@ -61,7 +61,7 @@ class StockIssuanceTable {
     this.reloadTable()
 
     //eslint-disable-next-line @typescript-eslint/no-unused-vars
-    $('#si-new-open').on('click', (event: JQuery.Event) => {
+    $('#si-new-open').on('click', (_event: JQuery.Event) => {
       stockIssuanceDialog.render({
         onChange: () => this.reloadTable(),
         open: true

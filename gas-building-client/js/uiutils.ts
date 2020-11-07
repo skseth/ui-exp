@@ -69,7 +69,7 @@ export function tableBody<T>(
   actionfn: ActionFunction
 ): string {
   const trs = rows
-    .map((row, index) =>
+    .map((_row, index) =>
       tableRow(
         attrs,
         widths,
