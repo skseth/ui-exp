@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig-gas-ui",
-  "include": ["**/*.ts", "../shared/gas-client-lib/*.ts", "../shared/building-model/*.ts"],
+  "include": ["src/**/*.ts", "../shared/gas-client-lib/*.ts", "../shared/building-model/*.ts"],
   "compilerOptions": {
     "types": ["jquery", "jqueryui"],
     "inlineSourceMap": true,

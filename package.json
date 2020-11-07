@@ -5,7 +5,7 @@
   "repository": "git@github.com:skseth/ui-exp.git",
   "license": "MIT",
   "scripts": {
-    "build-gas-building-client": "rimraf build/gas-building-client && npx parcel build gas-building-client/si.html --out-dir build/gas-building-client --no-minify --no-cache --no-source-maps",
+    "build-gas-building-client": "rimraf build/gas-building-client && npx parcel build gas-building-client/src/si.html --out-dir build/gas-building-client --no-minify --no-cache --no-source-maps",
     "build-gas-building-server": "rimraf build/gas-building-server && cd gas-building-server && npx tsc --build",
     "build-gas-building": "npm run build-gas-building-client && npm run build-gas-building-server",
     "build-gas-building-package": "copyfiles -f build/gas-building-client/si.html gas-building-server/config/appsscript.json build/gas-building-server",
@@ -38,7 +38,7 @@
     "typescript": "^3.8.2"
   },
   "alias": {
-    "@shared/ui-lib/input": "./shared/ui-lib/input.ts",
+    "@shared/ui-lib": "./shared/ui-lib/index.ts",
     "@shared/date-lib": "./shared/date-lib/index.ts"
   }
 }

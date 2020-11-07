@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig-gas-imports",
-  "include": ["**/*.ts", "../shared/date-lib/*.ts", "../shared/gas-lib/index.ts", "../shared/define-lib/index.ts", "../shared/building-model/*.ts"],
+  "include": ["src/**/*.ts", "../shared/date-lib/*.ts", "../shared/gas-lib/index.ts", "../shared/define-lib/index.ts", "../shared/building-model/*.ts"],
   "compilerOptions": {
     "outFile": "../build/gas-building-server/Code.js",
     "baseUrl": ".",
