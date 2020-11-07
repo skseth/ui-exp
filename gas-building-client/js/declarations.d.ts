@@ -1,8 +1,10 @@
-import { InventoryService } from '../../shared/building-model/index'
+import { InventoryService } from '@shared/building-model'
 import { GoogleScriptRun } from '../../shared/gas-client-lib/index'
 
-declare namespace google {
-  namespace script {
-    let run: GoogleScriptRun<InventoryService>
+declare global {
+  namespace google {
+    namespace script {
+      let run: GoogleScriptRun<InventoryService>
+    }
   }
 }

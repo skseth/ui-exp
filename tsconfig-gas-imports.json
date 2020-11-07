@@ -1,4 +1,7 @@
 {
+  // tsconfig file for Google Apps Script projects, using AMD modules
+  // To make this work, you have to add the home made "define" in ./shared/gas-lib/define.js, which 
+  // actually helps to define the externals
   "compilerOptions": {
     "composite": true,
     "rootDir": ".",

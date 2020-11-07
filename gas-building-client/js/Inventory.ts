@@ -1,5 +1,5 @@
-import { InventoryItem } from '../../shared/building-model/index'
-import { google } from './declarations'
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+import { InventoryItem } from '@shared/building-model'
 
 export class Inventory {
   #list: string[]

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
 const InventoryService = () =>
   modules['gas-building-server/service'].exports
-    .InventoryService as InventoryService
+    .InventoryService as buildingModel.InventoryService
 
 const doGet = () => InventoryService().index()
-const newStockIssuance = (req: model.StockIssuance) =>
+const newStockIssuance = (req: buildingModel.StockIssuance) =>
   InventoryService().newStockIssuance(req)
 const stockIssuanceList = () => InventoryService().stockIssuanceList()
 const inventoryList = () => InventoryService().inventoryList()

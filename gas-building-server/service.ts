@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { InventoryItem, StockIssuance } from '../shared/building-model/index'
+import { InventoryItem, StockIssuance } from '@shared/building-model'
 import {
   getStartOfLastWeek,
   isLater,

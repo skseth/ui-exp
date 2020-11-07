@@ -9,8 +9,7 @@ import {
   shallowEqual,
   ValueOf
 } from '@shared/ui-lib/input'
-import { StockIssuance } from '../../shared/building-model/index'
-import { google } from './declarations'
+import { StockIssuance } from '@shared/building-model'
 import { Inventory } from './Inventory'
 
 export abstract class Dialog<T> {

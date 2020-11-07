@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-declare type InventoryService = {
-  index: () => GoogleAppsScript.HTML.HtmlOutput
-  newStockIssuance: (req: model.StockIssuance) => void
-  stockIssuanceList: () => model.StockIssuance[]
-  inventoryList(): model.InventoryItem[]
-}
+declare namespace buildingModel {
+  export type InventoryService = {
+    index: () => GoogleAppsScript.HTML.HtmlOutput
+    newStockIssuance: (req: StockIssuance) => void
+    stockIssuanceList: () => StockIssuance[]
+    inventoryList(): InventoryItem[]
+  }
 
-declare namespace model {
-  type StockIssuance = {
+  export type StockIssuance = {
     rowIndex: number
     issueDate: string
     itemName: string
@@ -17,9 +16,13 @@ declare namespace model {
     to: string
   }
 
-  type InventoryItem = {
+  export type InventoryItem = {
     name: string
     unit: string
     category: string
   }
+}
+
+declare module '@shared/building-model' {
+  export = buildingModel
 }

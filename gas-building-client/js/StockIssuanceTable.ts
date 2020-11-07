@@ -1,11 +1,12 @@
+import { StockIssuance } from '@shared/building-model'
 import { stockIssuanceDialog } from './StockIssuanceDialog'
 import { RowAction, tableBody, tableHeader } from './uiutils'
 
 class StockIssuanceTable {
-  updateTable(issuances: model.StockIssuance[]) {
+  updateTable(issuances: StockIssuance[]) {
     const widths = [2, 4, 1, 1, 2, 2]
     const headers = ['Issue Date', 'Item', 'Unit', 'Quantity', 'To', 'Action']
-    const attrs: (keyof model.StockIssuance)[] = [
+    const attrs: (keyof StockIssuance)[] = [
       'issueDate',
       'itemName',
       'unit',
@@ -22,7 +23,7 @@ class StockIssuanceTable {
         issuances,
         attrs,
         widths,
-        (r: number, c: keyof model.StockIssuance) => issuances[r][c].toString(),
+        (r: number, c: keyof StockIssuance) => issuances[r][c].toString(),
         idfn
       )}`
     )
@@ -51,7 +52,7 @@ class StockIssuanceTable {
       .withFailureHandler((error) => console.log(error))
       .withSuccessHandler((items) => {
         console.log(items)
-        this.updateTable(items as model.StockIssuance[])
+        this.updateTable(items as StockIssuance[])
       })
       .stockIssuanceList()
   }
